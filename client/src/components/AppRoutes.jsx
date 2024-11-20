@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import PostsList from '../features/posts/PostsList';
 import PostDetails from '../features/posts/PostDetails';
+import NewPostForm from '../features/posts/NewPostForm';
 
 
 function AppRoutes() {
@@ -9,7 +10,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<PostsList/>} />
       <Route path="/posts/:id" element={<PostDetails/>} />
-      <Route path="/new" element={<h1>New Post</h1>} />
+      <Route path="/new" element={<NewPostForm/>} />
     </Routes>
   )
 }
