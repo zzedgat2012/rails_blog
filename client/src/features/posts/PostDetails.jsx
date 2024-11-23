@@ -56,6 +56,8 @@ function PostDetails() {
       <p>{post.body}</p>
       <Link to="/">Back to Posts</Link>
       {" | "}
+      <Link to={`/posts/${post.id}/edit`}>Edit</Link>
+      {" | "}
       <button onClick={deletePost}>Delete</button>
     </div>
   )
