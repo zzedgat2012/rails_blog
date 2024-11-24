@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "../../constants";
+import { createPost } from '../../services/postService'
 
 function NewPostForm() {
   const [title, setTitle] = useState("");
@@ -12,22 +12,11 @@ function NewPostForm() {
 
     const postData = { post: { title, body } };
 
-    const response = await fetch(API_URL, {
-      method: "POST",
-      mode: 'cors',
-      credentials: 'include',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    });
-
-
-    if (response.ok) {
-      const post = await response.json();
-      navigate(`/posts/${post.id}`)
-    } else {
-      console.log("An error has occured");
+    try {
+      const response = await createPost(postData);
+      navigate(`/posts/${response.id}`);
+    } catch(e) {
+      console.log("An error occurred: ", e);
     }
   }
 

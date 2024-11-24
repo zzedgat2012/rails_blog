@@ -21,15 +21,15 @@ async function fetchPost(id) {
   return response.json();
 }
 
-async function createPost(post) {
+async function createPost(postData) {
   const response = await fetch(`${API_URL}`, {
-    method: "PUT",
+    method: "POST",
     mode: "cors",
     credentials: 'include',
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(post),
+    body: JSON.stringify(postData),
   });
 
   if (!response.ok) {
@@ -39,9 +39,9 @@ async function createPost(post) {
   return response.json();
 }
 
-async function editPost(post) {
-  const response = await fetch(`${API_URL}/${post.id}`, {
-    method: "PATCH",
+async function updatePost(id, post) {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: "PUT",
     mode: "cors",
     credentials: 'include',
     headers: {
@@ -73,4 +73,4 @@ async function deletePost(id) {
   }
 }
 
-export { deletePost, fetchAllPosts, fetchPost, createPost, editPost };
+export { deletePost, fetchAllPosts, fetchPost, createPost, updatePost };
