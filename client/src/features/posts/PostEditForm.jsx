@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { API_URL } from "../../constants";
+import { fetchPost, updatePost } from "../../services/postService";
 
 function PostEditForm() {
   const [post, setPost] = useState(null);
@@ -13,16 +13,10 @@ function PostEditForm() {
     // Fetch the current post by id
     const fetchCurrentPost = async () => {
       try {
-        const response = await fetch (`${API_URL}/${id}`)
-        if (response.ok) {
-          const json = await response.json();
-          setPost(json);
-        } else {
-          throw response;
-        }
-      } catch (e) {
-        console.log("An error has occured: ", e);
-        setError(e);
+        const json = await fetchPost(id);
+        setPost(json);
+      } catch(e) {
+        setError("An error occurred: ", e);
       } finally {
         setLoading(false);
       }
@@ -33,25 +27,16 @@ function PostEditForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const updatedPost = {
+      title: post.title,
+      body: post.body,
+    };
+
     try {
-      const response = await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        mode: "cors",
-        credentials: 'include',
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(post),
-      });
-      if (response.ok) {
-        const json = await response.json();
-        console.log("Succes", json);
-        navigate(`/posts/${id}`);
-      } else {
-        throw response;
-      }
-    } catch (e) {
-      console.log("An error has occurred: ", e);
+      const response = await updatePost(id, updatedPost);
+      navigate(`/posts/${response.id}`);
+    } catch(e) {
+      console.log("An error occurred: ", e);
     }
   }
 
