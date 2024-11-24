@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
-import { API_URL } from '../../constants'
+import { deletePost as deletePostService, fetchPost } from "../../services/postService"
 
 function PostDetails() {
   const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [, setError] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -12,17 +11,10 @@ function PostDetails() {
   useEffect(() => {
     const fetchCurrentPost = async () => {
       try {
-        const response = await fetch(`${API_URL}/${id}`);
-        if (response.ok) {
-          const json = await response.json();
-          setPost(json);
-            setLoading(false);
-        } else {
-          throw response;
-        }
+        const json = await fetchPost(id);
+        setPost(json);
       } catch (e) {
-        setError("An error occurred. Akward...");
-        console.log("An error occurred: ", e);
+        setError("An error occurred: ", e);
       }
     };
     fetchCurrentPost();
@@ -30,25 +22,14 @@ function PostDetails() {
 
   const deletePost = async() => {
     try {
-      const response = await fetch(`${API_URL}/${id}`, {
-        method: "DELETE",
-        mode: "cors",
-        credentials: 'include',
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.ok) {
-         navigate(`/`);
-      } else {
-        throw response;
-      }
-    } catch (e) {
+        await deletePostService(post.id);
+        navigate('/');
+      } catch (e) {
       console.log("An error occurred: ", e);
     }
   }
 
-  if (loading) return <h2>Loading...</h2>
+  if (!post) return <h2>Loading...</h2>
 
   return(
     <div>
